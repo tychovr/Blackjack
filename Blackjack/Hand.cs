@@ -13,10 +13,6 @@
             return _instance;
         }
 
-        // Get instances
-        Deck deck = Deck.GetInstance();
-        Stats stats = Stats.GetInstance();
-
         public List<Hand> dealerHand = new List<Hand>();
         public List<Hand> playerList = new List<Hand>();
 
@@ -40,6 +36,10 @@
         // Enter player names and 
         public void PlayerHand()
         {
+            // Get instances
+            Deck deck = Deck.GetInstance();
+            Stats stats = Stats.GetInstance();
+
             int players = 0;
 
             for (int i = 0; i < 1;)

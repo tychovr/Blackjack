@@ -13,10 +13,10 @@
             return _instance;
         }
 
-        // Get Hand instance
-        Hand hand = Hand.GetInstance();
         public void showStats()
         {
+            // Get instances
+            Hand hand = Hand.GetInstance();
             int index = 0;
 
             // Prints out the stats of the players
@@ -67,6 +67,8 @@
 
         public void ChangeStats(int index)
         {
+            // Get instances
+            Hand hand = Hand.GetInstance();
             Console.CursorTop = 4 + index;
             Console.CursorLeft = 75;
             Console.Write("|                |           |          |");

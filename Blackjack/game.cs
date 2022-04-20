@@ -3,12 +3,15 @@
     internal class Game
     {
         // Get instances
-        Hand hand = Hand.GetInstance();
-        Stats stats = Stats.GetInstance();
         public string ActionCase = "";
         public ConsoleKeyInfo KeyInput;
         public string KeyInputCase = "";
         public string EmptyLeft = "                                                       ";
+
+        // Fields
+        public string CurrentPlayer = "";
+        public int index = 0;
+        public string Action = "";
 
         public static void Initialize()
         {
@@ -131,6 +134,10 @@
 
         public void StartGame()
         {
+            // Call instances
+            Hand hand = Hand.GetInstance();
+            Stats stats = Stats.GetInstance();
+
             // Deck UI
             Console.Clear();
             Console.SetCursorPosition(2, 1);
@@ -256,20 +263,17 @@
         // Dealer's hand on 5, 13
         // Actions on 5, 19
         // Comments on 5, 26
-        // Command input on playerList.Count() + 6 | (game log)
-        // Game log on playerList.Count() + 8 and further
+        // Command input on 81, playerList.Count() + 6 | (game log)
+        // Game log on 78, playerList.Count() + 8 and further
         public void Blackjack()
         {
-            // Get Hand instance
+            // Get instances
             Hand hand = Hand.GetInstance();
+            Stats stats = Stats.GetInstance();
 
             // Input Fields
             string CommandInput = "";
             int CommandInputNums = 0;
-
-            // List based fields
-            string CurrentPlayer = "";
-            int index = 0;
 
             // Temp memory fields
             int Bet = 0;
@@ -301,9 +305,12 @@
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(CurrentPlayer + "'s ");
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("turn!");
+                Console.Write("turn!                  ");
 
                 // Player's Hand & Bets
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.SetCursorPosition(5, 7);
+                Console.Write("P------------------------------");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(5, 7);
                 Console.Write(hand.playerList[index].PlayerName + "'s Hand & Bets");
@@ -311,12 +318,13 @@
                 Console.Write(EmptyLeft);
                 Console.SetCursorPosition(5, 9);
                 Console.ForegroundColor = ConsoleColor.White;
-
-                //foreach (Hand cards in hand.playerList.CardDraw)
-                //{
-                //    Console.Write(hand.playerList.CardDraw.);
-                //}
                 Thread.Sleep(3000);
+
+                // No actions for ReadLine, omdat ja
+                ActionCase = "0";
+                Console.SetCursorPosition(5, 21);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("No actions available.                                   ");
 
                 // Comment + Input Bet
                 for (int j = 0; j < 1;)
@@ -372,155 +380,264 @@
                         hand.playerList[index].Saldo -= Bet;
                         stats.ChangeStats(index);
                         Console.SetCursorPosition(119, 29);
+
+                        // Possible Actions Introduction - Round
+                        Console.SetCursorPosition(5, 21);
+                        Console.Write(EmptyLeft);
+                        Console.SetCursorPosition(5, 21);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("q");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write(": Quit | ");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("x");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write(": Secret");
+                        ActionCase = "1";
+                        Console.SetCursorPosition(119, 29);
+
                         Thread.Sleep(3000);
                         j++;
                     }
                 }
 
+                // Comment Round Start
+                Console.SetCursorPosition(5, 26);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("Choose one of the actions above!           ");
+
+                // Possible Actions Round
+                Console.SetCursorPosition(5, 21);
+                Console.Write(EmptyLeft);
+                Console.SetCursorPosition(5, 21);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("h");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(": Hit | ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("s");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(": Stand | ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("d");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(": Double Down | ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("q");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(": Quit | ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("x");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(": Secret");
+
+                // Input Action
                 ActionCase = "2";
                 Console.CursorLeft = 81;
                 Console.CursorTop = hand.playerList.Count() + 8;
                 Console.ForegroundColor = ConsoleColor.Green;
                 KeyInput = Console.ReadKey();
+                Console.CursorLeft = 81;
+                Console.CursorTop = hand.playerList.Count() + 8;
+                Console.Write("           ");
                 KeyInputCase = KeyInput.KeyChar.ToString();
+                Thread.Sleep(3000);
             }
         }
 
         public void PossibleActions()
         {
-            switch (ActionCase)
+            // Get instances
+            Hand hand = Hand.GetInstance();
+            Deck deck = Deck.GetInstance();
+
+            // Local fields
+            List<Cards> Card = new List<Cards>();
+            string SuitName = "";
+
+            if (KeyInputCase != null)
             {
-                // Case 1, game nog niet begonnen, bet invullen.
-                case "1":
-                    switch (KeyInputCase)
-                    {
-                        case "q":
-                            Thread.Sleep(10);
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.SetCursorPosition(5, 3);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 9);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 15);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 21);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 26);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.CursorLeft = 28;
-                            Thread.Sleep(3000);
-                            Console.Clear();
-                            Console.SetCursorPosition(45, 15);
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write("Quitted blackjack succesfully.");
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.SetCursorPosition(0, 29);
-                            System.Environment.Exit(0);
-                            break;
+                switch
+                    (ActionCase)
+                {
+                    // Case 1, game nog niet begonnen, bet invullen.
+                    case "1":
+                        switch (KeyInputCase)
+                        {
+                            case "q":
+                                Thread.Sleep(10);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.SetCursorPosition(5, 3);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 9);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 15);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 21);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 26);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.CursorLeft = 28;
+                                Thread.Sleep(3000);
+                                Console.Clear();
+                                Console.SetCursorPosition(45, 15);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write("Quitted blackjack succesfully.");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.SetCursorPosition(0, 29);
+                                System.Environment.Exit(0);
+                                break;
 
-                        case "x":
-                            // Nog geen idee, maar hier komt de easter egg puzzel
-                            break;
+                            case "x":
+                                // Nog geen idee, maar hier komt de easter egg puzzel
+                                break;
 
-                        default:
-                            Console.SetCursorPosition(5, 26);
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write("Invalid input!                          ");
-                            Console.SetCursorPosition(119, 29);
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Thread.Sleep(3000);
-                            break;
-                    }
-                    break;
+                            default:
+                                Console.SetCursorPosition(5, 24);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write("Invalid input!                          ");
+                                Console.SetCursorPosition(119, 29);
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Thread.Sleep(3000);
+                                break;
+                        }
+                        break;
 
-                // Case 2, blackjack begonnen, nog geen kaart gepakt.
-                case "2":
-                    switch (KeyInputCase)
-                    {
-                        case "h":
-                            // Hier komt hit
-                            break;
+                    // Case 2, blackjack begonnen, nog geen kaart gepakt.
+                    case "2":
+                        switch (KeyInputCase)
+                        {
+                            case "h":
+                                // Comment
+                                Console.SetCursorPosition(5, 26);
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.Write(CurrentPlayer);
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.Write(" hits.                                  ");
 
-                        case "s":
-                            // Hier komt stand
-                            break;
+                                // Get new card and add to hand
 
-                        case "d":
-                            // Hier komt double down
-                            break;
+                                Card = deck.DrawCard(1);
+                                hand.playerList[index].CardDraw.Add(Card[0]);
+                                Console.SetCursorPosition(5, 11);
+                                Console.Write(EmptyLeft);
+                                Console.SetCursorPosition(5, 11);
+                                for (int i = 0; i < hand.playerList[index].CardDraw.Count(); i++)
+                                {
+                                    SuitName = hand.playerList[index].CardDraw[i].SuitName.ToString();
+                                    Console.Write(hand.playerList[index].CardDraw[i].ValueName.ToString() + " of " + SuitName + " | ");
+                                }
+                                Console.SetCursorPosition(119, 29);
+                                ActionCase = "1";
+                                Thread.Sleep(3000);
+                                ActionCase = "3";
+                                break;
 
-                        case "q":
-                            Thread.Sleep(10);
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.SetCursorPosition(5, 3);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 9);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 15);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 21);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 26);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.CursorLeft = 28;
-                            Thread.Sleep(3000);
-                            Console.Clear();
-                            Console.SetCursorPosition(45, 15);
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write("Quitted blackjack succesfully.");
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.SetCursorPosition(0, 29);
-                            System.Environment.Exit(0);
-                            break;
+                            case "s":
+                                // Hier komt stand
+                                break;
 
-                        case "x":
-                            // Hier komt secret
-                            break;
-                    }
-                    break;
+                            case "d":
+                                // Hier komt double down
+                                break;
 
-                // Case 3, na 1 kaart pakken (Geen Double Down)
-                case "3":
-                    switch (KeyInputCase)
-                    {
-                        case "h":
-                            // Hier komt hit
-                            break;
+                            case "q":
+                                Thread.Sleep(10);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.SetCursorPosition(5, 3);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 9);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 15);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 21);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 26);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.CursorLeft = 28;
+                                Thread.Sleep(3000);
+                                Console.Clear();
+                                Console.SetCursorPosition(45, 15);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write("Quitted blackjack succesfully.");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.SetCursorPosition(0, 29);
+                                System.Environment.Exit(0);
+                                break;
 
-                        case "s":
-                            // Hier komt stand
-                            break;
+                            case "x":
+                                // Hier komt secret
+                                break;
 
-                        case "q":
-                            Thread.Sleep(10);
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.SetCursorPosition(5, 3);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 9);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 15);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 21);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.SetCursorPosition(5, 26);
-                            Console.Write("Quitting blackjack.....                ");
-                            Console.CursorLeft = 28;
-                            Thread.Sleep(3000);
-                            Console.Clear();
-                            Console.SetCursorPosition(45, 15);
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write("Quitted blackjack succesfully.");
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.SetCursorPosition(0, 29);
-                            System.Environment.Exit(0);
-                            break;
+                            default:
+                                Console.SetCursorPosition(5, 26);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write("Invalid input!                          ");
+                                Console.SetCursorPosition(119, 29);
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Thread.Sleep(3000);
+                                break;
+                        }
+                        break;
 
-                        case "x":
-                            // Hier komt secret
-                            break;
-                    }
-                    break;
+                    // Case 3, na 1 kaart pakken (Geen Double Down)
+                    case "3":
+                        switch (KeyInputCase)
+                        {
+                            case "h":
+                                break;
+
+                            case "s":
+                                // Hier komt stand
+                                break;
+
+                            case "q":
+                                Thread.Sleep(10);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.SetCursorPosition(5, 3);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 9);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 15);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 21);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.SetCursorPosition(5, 26);
+                                Console.Write("Quitting blackjack.....                ");
+                                Console.CursorLeft = 28;
+                                Thread.Sleep(3000);
+                                Console.Clear();
+                                Console.SetCursorPosition(45, 15);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write("Quitted blackjack succesfully.");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.SetCursorPosition(0, 29);
+                                System.Environment.Exit(0);
+                                break;
+
+                            case "x":
+                                // Hier komt secret
+                                break;
+
+                            default:
+                                Console.SetCursorPosition(5, 26);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write("Invalid input!                          ");
+                                Console.SetCursorPosition(119, 29);
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Thread.Sleep(3000);
+                                break;
+                        }
+                        break;
+                        KeyInputCase = "";
+                }
             }
+        }
+
+        public void Hit()
+        {
+            Console.WriteLine("Test");
         }
     }
 }
+
