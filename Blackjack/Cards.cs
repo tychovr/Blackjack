@@ -2,10 +2,19 @@
 {
     class Cards
     {
-        public void Card(int cardValue, string cardSuit)
+        public string ValueName;
+        public string SuitName;
+        public int ValueInt;
+        public int SuitInt;
+
+        public bool Initiate { get; set; } = true;
+
+        public Cards(string valueName, int valueInt, string suitName, int suitInt)
         {
-            int value = cardValue;
-            string suit = cardSuit;
+            ValueName = valueName;
+            ValueInt = valueInt;
+            SuitName = suitName;
+            SuitInt = suitInt;
         }
 
         public enum cardSuit
@@ -19,21 +28,24 @@
 
         public enum cardValue
         {
-            one = 1,
-            two = 2,
-            three = 3,
-            four = 4,
-            five = 5,
-            six = 6,
-            seven = 7,
-            eight = 8,
-            nine = 9,
-            jacks = 10,
-            queen = 10,
-            king = 10,
-            ace = 11
+            Two = 1,
+            Three = 2,
+            Four = 3,
+            Five = 4,
+            Six = 5,
+            Seven = 6,
+            Eight = 7,
+            Nine = 8,
+            Ten = 9,
+            Jacks = 10,
+            Queen = 11,
+            King = 12,
+            Ace = 13
         }
 
-
+        public override string ToString()
+        {
+            return ValueName + " of " + SuitName;
+        }
     }
 }
