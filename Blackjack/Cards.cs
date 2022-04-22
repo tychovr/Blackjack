@@ -2,7 +2,7 @@
 {
     class Cards
     {
-        public string NewCardName;
+        public string CardName;
         public string ValueName;
         public string SuitName;
         public int ValueInt;
@@ -10,13 +10,13 @@
 
         public bool Initiate { get; set; } = true;
 
-        public Cards(string valueName, int valueInt, string suitName, int suitInt, string newCardName)
+        public Cards(string valueName, int valueInt, string suitName, int suitInt, string cardName)
         {
             ValueName = valueName;
             ValueInt = valueInt;
             SuitName = suitName;
             SuitInt = suitInt;
-            NewCardName = newCardName;
+            CardName = cardName;
         }
 
         public enum cardSuit

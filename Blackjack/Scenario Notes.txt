@@ -1,19 +1,22 @@
-﻿Comments:
+﻿Dealer:
+0, deal card (first round)
+1, hit action
+2, stand action
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Comments:
 0, Player's turn
-1, Place bet + validation
-2, Bet over 1000
-3, Bet under 10
-4, Bet over balance
-5, Bet is (value)
-6, Choose one action
-7, Invalid input
+1, Place bet + validation + input
+2, Choose one action
+3, Invalid input
 
 Comments : Player action
 !! Included in actions
 
 Comments : Dealer action
-8, Dealer hit
-9, Dealer stand
+4, Dealer hit
+5, Dealer stand
 
 Comments : Win determation
 7, player went over 21 and lost
@@ -32,12 +35,14 @@ Actions:
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Player Hand:
-0, Player's hand + Total + Bet
+0, No cards
+1, Player's hand + Total + Bet
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Dealer Hand:
-0, first card + hidden card + hidden total
-1, all cards reveal
+0, No cards
+1, first card + hidden card + hidden total
+2, all cards reveal
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -47,10 +52,8 @@ Deck:
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Game Log:
-0, empty log
-1, player dealt card
-2, dealer dealt first card + hidden card
-3, dealer dealt new card
-4, Player wins (money won) with (totalvalue cards)
-5, Dealer wins with (totalvalue cards)
-6, Player and Dealer tie with (totalvalue cards)
+0, player dealt card
+1, dealer dealt card
+2, Player wins (money won) with (totalvalue cards)
+3, Dealer wins with (totalvalue cards)
+4, Player and Dealer tie with (totalvalue cards)

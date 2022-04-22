@@ -91,8 +91,8 @@
 
                         else
                         {
-                            List<Cards> cards = deck.DrawCard(2);
-                            Hand player = new Hand(cards, tempPlayerName, 10000, 0);
+                            List<Cards> cards = null;
+                            Hand player = new Hand(cards, tempPlayerName, 1000, 0);
                             playerList.Add(player);
                             players++;
                         }

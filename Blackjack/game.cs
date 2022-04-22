@@ -7,6 +7,11 @@
         public ConsoleKeyInfo KeyInput;
         public string KeyInputCase = "";
         public string EmptyLeft = "                                                        ";
+        public string EmptyRight = "                                                        ";
+
+        // Input fields
+        public int CommandInputNums = 0;
+        public string CommandInput = "";
 
         // Fields
         public string CurrentPlayer = "";
@@ -16,6 +21,12 @@
         public string CardTransfer = "";
         public int GameLog = 0;
         public int Bet = 0;
+        public int valueInt = 0;
+        public int totalValue = 0;
+
+        // Lists
+        public List<Cards> Card = new List<Cards>();
+
 
         public static void Initialize()
         {
@@ -159,13 +170,6 @@
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(5, 1);
             Console.Write("Deck");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.SetCursorPosition(5, 3);
-            Console.Write("Remaining cards in deck:");
-            Console.SetCursorPosition(30, 3);
-            Console.Write(Deck.GetInstance().shuffledDeck.Count());
-            Console.SetCursorPosition(7, 4);
-            Console.ForegroundColor = ConsoleColor.White;
 
             // Player UI
             Console.ForegroundColor = ConsoleColor.Magenta;
@@ -276,48 +280,180 @@
             Hand hand = Hand.GetInstance();
             Stats stats = Stats.GetInstance();
 
-            // Input Fields
-            string CommandInput = "";
-            int CommandInputNums = 0;
-
-            // Temp memory fields
-            int Bet = 0;
-
             for (int i = 0; i < 1;)
             {
+                PlayerHandSection(0); // Player's hand hidden
+                DealerHandSection(0); // Dealer's hand hidden
+                CommentSection(0); // Announce player
+                ActionSection(0); // No actions available
+                DeckSection(0); // Show deck count
+                Dealer(0); // Dealer get cards
+                PlayerGetDeck(); // Player get cards before round
 
-                // No actions for ReadLine, omdat ja
-                ActionCase = "0";
-                Console.SetCursorPosition(5, 21);
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("No actions available.                                   ");
-
-                // Comment Introduction
-                CommentSection(0);
-
-                // Player's hand (hidden)
-                Console.SetCursorPosition(5, 9);
-                Console.Write(EmptyLeft);
-                Console.SetCursorPosition(5, 9);
-                Console.Write("Hand hidden.");
-
-                // Dealer's hand (hidden)
-                Console.SetCursorPosition(5, 15);
-                Console.Write(EmptyLeft);
-                Console.SetCursorPosition(5, 15);
-                Console.Write("Hand hidden.");
-
-                // Player's Hand & Bets
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.SetCursorPosition(5, 7);
-                Console.Write("-------------------------------");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.SetCursorPosition(5, 7);
-                Console.Write(hand.playerList[index].PlayerName + "'s Hand & Bets");
                 Console.SetCursorPosition(119, 29);
                 Thread.Sleep(3000);
 
-                // Comment + Input Bet
+                CommentSection(1); // Comment + input bet
+
+                // Start round
+                CommentSection(2); // Choose action
+                PlayerHandSection(1); // Player's hand shown
+                DealerHandSection(1); // Dealer's hand shown
+                ActionSection(1); // Available actions (hit, stand, double down, quit, secret)
+
+                // Input Action
+                ActionCase = "2";
+                GetKeyInput();
+                PossibleActions();
+                Thread.Sleep(3000);
+
+                /* 
+                Hit afmaken, hoger dan 21, lose round
+                Aan andere actions beginnen
+                Dealer speelt nadat player action heeft gedaan, tenzij player lose
+                Object reference not set for blackjack() and PlayerGetDeck()
+                */
+            }
+        }
+
+        public void PlayerGetDeck()
+        {
+            Hand hand = Hand.GetInstance();
+            Deck deck = Deck.GetInstance();
+
+            Card = deck.DrawCard(2);
+            hand.playerList[index].CardDraw.Add(Card[0]);
+        }
+
+        public void Dealer(int Scenario)
+        {
+            Hand hand = Hand.GetInstance();
+            Deck deck = Deck.GetInstance();
+
+            if (Scenario == 0)
+            {
+                Card = deck.DrawCard(1);
+                hand.dealerHand[0].CardDraw.Add(Card[0]);
+                GameLogSection(1);
+            }
+        }
+
+        public void PossibleActions()
+        {
+            // Get instances
+            Hand hand = Hand.GetInstance();
+            Deck deck = Deck.GetInstance();
+
+            // Local fields
+            List<Cards> Card = new List<Cards>();
+            string SuitName = "";
+            int totalValue = 0;
+            int valueInt = 0;
+
+            if (KeyInputCase != null)
+            {
+                switch
+                    (ActionCase)
+                {
+                    // Case 1, niet meer nodig denk ik?
+                    case "1":
+                        switch (KeyInputCase)
+                        {
+                            case "q":
+                                Quit();
+                                break;
+
+                            case "x":
+                                Secret();
+                                break;
+
+                            default:
+                                CommentSection(2);
+                                break;
+                        }
+                        break;
+
+                    // Case 2, blackjack begonnen, nog geen kaart gepakt.
+                    case "2":
+                        switch (KeyInputCase)
+                        {
+                            case "h":
+                                Hit();
+                                break;
+
+                            case "s":
+                                Stand();
+                                break;
+
+                            case "d":
+                                DoubleDown();
+                                break;
+
+                            case "q":
+                                Quit();
+                                break;
+
+                            case "x":
+                                Secret();
+                                break;
+
+                            default:
+                                CommentSection(2);
+                                break;
+                        }
+                        break;
+
+                    // Case 3, na 1 kaart pakken (Geen Double Down)
+                    case "3":
+                        switch (KeyInputCase)
+                        {
+                            case "h":
+                                Hit();
+                                break;
+
+                            case "s":
+                                Stand();
+                                break;
+
+                            case "q":
+                                Quit();
+                                break;
+
+                            case "x":
+                                Secret();
+                                break;
+
+                            default:
+                                CommentSection(2);
+                                break;
+                        }
+                        break;
+                }
+            }
+        }
+
+
+        // Section based methods (Comments, actions, dealer hand, player hand, deck)
+        public void CommentSection(int Scenario)
+        {
+            Hand hand = Hand.GetInstance();
+            Stats stats = Stats.GetInstance();
+
+            if (Scenario == 0) // Players turn
+            {
+                CurrentPlayer = hand.playerList[index].PlayerName;
+                Console.SetCursorPosition(5, 26);
+                Console.Write(EmptyLeft);
+                Console.SetCursorPosition(5, 26);
+                Console.Write("It's ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(CurrentPlayer + "'s ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("turn!");
+            }
+
+            else if (Scenario == 1) // Bet + input
+            {
                 for (int j = 0; j < 1;)
                 {
                     Console.ForegroundColor = ConsoleColor.White;
@@ -345,6 +481,7 @@
                         Console.ForegroundColor = ConsoleColor.White;
                         Thread.Sleep(3000);
                     }
+
                     else if (CommandInputNums < 10)
                     {
                         Console.CursorLeft = 81;
@@ -357,6 +494,20 @@
                         Console.ForegroundColor = ConsoleColor.White;
                         Thread.Sleep(3000);
                     }
+
+                    else if (CommandInputNums > hand.playerList[index].Saldo)
+                    {
+                        Console.CursorLeft = 81;
+                        Console.CursorTop = hand.playerList.Count() + 8;
+                        Console.Write("           ");
+                        Console.SetCursorPosition(5, 26);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("You do not have enough money!              ");
+                        Console.SetCursorPosition(119, 29);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Thread.Sleep(3000);
+                    }
+
                     else
                     {
                         Console.CursorLeft = 81;
@@ -372,92 +523,43 @@
                         hand.playerList[index].Saldo -= Bet;
                         stats.ChangeStats(index);
                         Console.SetCursorPosition(119, 29);
-
-                        // Add player cards + bet too section
-                        int suitValue = 0;
-                        int totalValue = 0;
-                        int valueInt = 0;
-
-                        Console.SetCursorPosition(5, 9);
-                        Console.Write(EmptyLeft);
-                        Console.SetCursorPosition(5, 9);
-
-                        for (int n = 0; n < hand.playerList[index].CardDraw.Count(); n++)
-                        {
-                            suitValue = hand.playerList[index].CardDraw[n].SuitInt;
-
-                            if (suitValue == 1 || suitValue == 4)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                            }
-
-                            else if (suitValue == 2 || suitValue == 3)
-                            {
-                                Console.ForegroundColor = ConsoleColor.DarkGray;
-                            }
-
-                            if (hand.playerList[index].CardDraw[n].ValueInt >= 11)
-                            {
-                                valueInt = 10;
-                            }
-                            else
-                            {
-                                valueInt = hand.playerList[index].CardDraw[n].ValueInt;
-                            }
-
-                            // Transfer cards to shortened string
-                            CardTransfer += valueInt + " ";
-
-                            totalValue = valueInt + totalValue;
-                            Console.Write(hand.playerList[index].CardDraw[n].NewCardName + ", ");
-                        }
-
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("(" + totalValue + "), ($" + Bet + ")");
-
-                        // Dealer's Hand
-                        Console.SetCursorPosition(5, 15);
-                        Console.Write(EmptyLeft);
-                        Console.SetCursorPosition(5, 15);
-
-                        suitValue = hand.dealerHand[0].CardDraw[0].SuitInt;
-
-                        // Dealer's first card
-                        if (suitValue == 1 || suitValue == 4)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                        }
-
-                        else if (suitValue == 2 || suitValue == 3)
-                        {
-                            Console.ForegroundColor = ConsoleColor.DarkGray;
-                        }
-
-                        if (hand.dealerHand[0].CardDraw[0].ValueInt >= 11)
-                        {
-                            valueInt = 10;
-                        }
-                        else
-                        {
-                            valueInt = hand.dealerHand[0].CardDraw[0].ValueInt;
-                        }
-                        totalValue = valueInt + totalValue;
-
-                        Console.Write(hand.playerList[index].CardDraw[0].NewCardName + ",");
+                        j++;
                     }
-
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(" xX, (hidden)");
-                    Thread.Sleep(3000);
-                    j++;
                 }
+            }
 
-                // Comment Round Start
+            else if (Scenario == 2)
+            {
                 Console.SetCursorPosition(5, 26);
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write("Choose one of the actions above!           ");
+            }
 
-                // Possible Actions Round
+            else if (Scenario == 3)
+            {
+                Console.SetCursorPosition(5, 26);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("Invalid input!                          ");
+                Console.SetCursorPosition(119, 29);
+                Console.ForegroundColor = ConsoleColor.White;
+                Thread.Sleep(3000);
+            }
+        }
+
+        public void ActionSection(int Scenario)
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+
+            if (Scenario == 0)
+            {
+                Console.SetCursorPosition(5, 21);
+                Console.Write(EmptyLeft);
+                Console.SetCursorPosition(5, 21);
+                Console.Write("No actions available.");
+            }
+
+            else if (Scenario == 1)
+            {
                 Console.SetCursorPosition(5, 21);
                 Console.Write(EmptyLeft);
                 Console.SetCursorPosition(5, 21);
@@ -481,23 +583,167 @@
                 Console.Write("x");
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(": Secret");
+            }
 
-                // Input Action
-                ActionCase = "2";
-                Console.CursorLeft = 81;
-                Console.CursorTop = hand.playerList.Count() + 8;
+            else if (Scenario == 2)
+            {
+                Console.SetCursorPosition(5, 21);
+                Console.Write(EmptyLeft);
+                Console.SetCursorPosition(5, 21);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("h");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(": Hit | ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("s");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(": Stand | ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("q");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(": Quit | ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("x");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(": Secret");
+            }
+        }
+
+        public void PlayerHandSection(int Scenario)
+        {
+            Hand hand = Hand.GetInstance();
+
+            if (Scenario == 0) // Hand hidden
+            {
+                // Change section (Player's) to actual username
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.SetCursorPosition(5, 7);
+                Console.Write("-------------------------------");
                 Console.ForegroundColor = ConsoleColor.Green;
-                KeyInput = Console.ReadKey();
-                Console.CursorLeft = 81;
-                Console.CursorTop = hand.playerList.Count() + 8;
-                Console.Write("           ");
-                KeyInputCase = KeyInput.KeyChar.ToString();
-                PossibleActions();
-                Thread.Sleep(3000);
+                Console.SetCursorPosition(5, 7);
+                Console.Write(hand.playerList[index].PlayerName + "'s Hand & Bets");
+                Console.SetCursorPosition(119, 29);
 
+                // Hand hidden
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(5, 9);
+                Console.Write(EmptyLeft);
+                Console.SetCursorPosition(5, 9);
+                Console.Write("Hand hidden.");
+            }
+
+            else if (Scenario == 1) // Hand shown + update
+            {
+                int suitValue = 0;
+                int totalValue = 0;
+                int valueInt = 0;
+
+                Console.SetCursorPosition(5, 9);
+                Console.Write(EmptyLeft);
+                Console.SetCursorPosition(5, 9);
+
+                for (int n = 0; n < hand.playerList[index].CardDraw.Count(); n++)
+                {
+                    suitValue = hand.playerList[index].CardDraw[n].SuitInt;
+
+                    if (suitValue == 1 || suitValue == 4)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+
+                    else if (suitValue == 2 || suitValue == 3)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                    }
+
+                    if (hand.playerList[index].CardDraw[n].ValueInt >= 11 && hand.playerList[index].CardDraw[n].ValueInt <= 12)
+                    {
+                        valueInt = 10;
+                    }
+
+                    else if (hand.playerList[index].CardDraw[n].ValueInt == 13 && hand.playerList[index].CardDraw.Count() == 2)
+                    {
+                        valueInt = 11;
+                    }
+
+                    else if (hand.playerList[index].CardDraw[n].ValueInt == 13 && hand.playerList[index].CardDraw.Count() != 2)
+                    {
+                        valueInt = 1;
+                    }
+
+                    else
+                    {
+                        valueInt = hand.playerList[index].CardDraw[n].ValueInt;
+                    }
+
+                    totalValue = totalValue + valueInt;
+                    Console.Write(hand.playerList[index].CardDraw[n].CardName);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(", ");
+                }
+
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("(" + totalValue + "), (");
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.Write("$" + Bet);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(")");
+            }
+        }
+
+        public void DealerHandSection(int Scenario)
+        {
+            Hand hand = Hand.GetInstance();
+
+            if (Scenario == 0) // Hand hidden
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(5, 15);
+                Console.Write(EmptyLeft);
+                Console.SetCursorPosition(5, 15);
+                Console.Write("Hand hidden.");
+            }
+
+            else if (Scenario == 1)
+            {
                 int valueInt2 = 0;
                 int totalValue2 = 0;
 
+                Console.SetCursorPosition(5, 15);
+                int suitValue = hand.dealerHand[0].CardDraw[0].SuitInt;
+
+                if (suitValue == 1 || suitValue == 4)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+
+                else if (suitValue == 2 || suitValue == 3)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                }
+
+                if (hand.dealerHand[0].CardDraw[0].ValueInt >= 11)
+                {
+                    valueInt2 = 10;
+                }
+
+                else
+                {
+                    valueInt2 = hand.dealerHand[0].CardDraw[0].ValueInt;
+                }
+
+                totalValue2 = valueInt2 + totalValue2;
+                Console.Write(hand.dealerHand[index].CardDraw[0].CardName);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(", xX, (hidden)");
+            }
+
+            else if (Scenario == 2)
+            {
+                int valueInt2 = 0;
+                int totalValue2 = 0;
+
+                Console.SetCursorPosition(5, 15);
                 for (int n = 0; n < hand.dealerHand[0].CardDraw.Count(); n++)
                 {
                     int suitValue = hand.dealerHand[0].CardDraw[n].SuitInt;
@@ -516,221 +762,136 @@
                     {
                         valueInt2 = 10;
                     }
+
                     else
                     {
                         valueInt2 = hand.dealerHand[0].CardDraw[n].ValueInt;
                     }
+
                     totalValue2 = valueInt2 + totalValue2;
-                    Console.Write(hand.playerList[index].CardDraw[n].NewCardName + ", ");
+                    Console.Write(hand.dealerHand[index].CardDraw[n].CardName + ", ");
                 }
             }
-        }
-
-        public void PossibleActions()
-        {
-            // Get instances
-            Hand hand = Hand.GetInstance();
-            Deck deck = Deck.GetInstance();
-
-            // Local fields
-            List<Cards> Card = new List<Cards>();
-            string SuitName = "";
-            int totalValue = 0;
-            int valueInt = 0;
-
-            if (KeyInputCase != null)
-            {
-                switch
-                    (ActionCase)
-                {
-                    // Case 1, game nog niet begonnen, bet invullen.
-                    case "1":
-                        switch (KeyInputCase)
-                        {
-                            case "q":
-                                Quit();
-                                break;
-
-                            case "x":
-                                // Nog geen idee, maar hier komt de easter egg puzzel
-                                break;
-                        }
-                        break;
-
-                    // Case 2, blackjack begonnen, nog geen kaart gepakt.
-                    case "2":
-                        switch (KeyInputCase)
-                        {
-                            case "h":
-                                // Comment
-                                Console.SetCursorPosition(5, 26);
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.Write(CurrentPlayer);
-                                Console.ForegroundColor = ConsoleColor.White;
-                                Console.Write(" hits.                                  ");
-
-                                // Get new card and add to hand
-
-                                Card = deck.DrawCard(1);
-                                hand.playerList[index].CardDraw.Add(Card[0]);
-                                Console.SetCursorPosition(5, 9);
-                                Console.Write(EmptyLeft);
-                                Console.SetCursorPosition(5, 9);
-
-                                for (int n = 0; n < hand.playerList[index].CardDraw.Count(); n++)
-                                {
-                                    int suitValue = hand.playerList[index].CardDraw[n].SuitInt;
-
-                                    if (suitValue == 1 || suitValue == 4)
-                                    {
-                                        Console.ForegroundColor = ConsoleColor.Red;
-                                    }
-
-                                    else if (suitValue == 2 || suitValue == 3)
-                                    {
-                                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                                    }
-
-                                    if (hand.playerList[index].CardDraw[n].ValueInt >= 11)
-                                    {
-                                        valueInt = 10;
-                                    }
-                                    else
-                                    {
-                                        valueInt = hand.playerList[index].CardDraw[n].ValueInt;
-                                    }
-                                    totalValue = valueInt + totalValue;
-                                    Console.Write(hand.playerList[index].CardDraw[n].NewCardName + ", ");
-                                }
-
-                                Console.Write("(" + totalValue + "), ($" + Bet + ")");
-
-                                if (totalValue > 21)
-                                {
-                                    CommentSection(0);
-                                }
-
-                                Console.SetCursorPosition(119, 29);
-                                ActionCase = "1";
-                                Thread.Sleep(3000);
-                                ActionCase = "3";
-                                break;
-
-                            case "s":
-                                // Hier komt stand
-                                break;
-
-                            case "d":
-                                // Hier komt double down
-                                break;
-
-                            case "q":
-                                Quit();
-                                break;
-
-                            case "x":
-                                // Hier komt secret
-                                break;
-
-                            default:
-                                Console.SetCursorPosition(5, 26);
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write("Invalid input!                          ");
-                                Console.SetCursorPosition(119, 29);
-                                Console.ForegroundColor = ConsoleColor.White;
-                                Thread.Sleep(3000);
-                                break;
-                        }
-                        break;
-
-                    // Case 3, na 1 kaart pakken (Geen Double Down)
-                    case "3":
-                        switch (KeyInputCase)
-                        {
-                            case "h":
-                                break;
-
-                            case "s":
-                                // Hier komt stand
-                                break;
-
-                            case "q":
-                                Quit();
-                                break;
-
-                            case "x":
-                                // Hier komt secret
-                                break;
-
-                            default:
-                                Console.SetCursorPosition(5, 26);
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write("Invalid input!                          ");
-                                Console.SetCursorPosition(119, 29);
-                                Console.ForegroundColor = ConsoleColor.White;
-                                Thread.Sleep(3000);
-                                break;
-                        }
-                        break;
-                }
-            }
-        }
-
-
-        // Section based methods (Comments, actions, dealer hand, player hand, deck)
-        public void CommentSection(int Scenario)
-        {
-            Hand hand = Hand.GetInstance();
-
-            if (Scenario == 0)
-            {
-                CurrentPlayer = hand.playerList[index].PlayerName;
-                Console.SetCursorPosition(5, 26);
-                Console.Write(EmptyLeft);
-                Console.SetCursorPosition(5, 26);
-                Console.Write("It's ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(CurrentPlayer + "'s ");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("turn!");
-            }
-
-            else if (Scenario == 1)
-            {
-
-            }
-        }
-
-        public void ActionSection(int Scenario)
-        {
-
-        }
-
-        public void PlayerHandSection(int Scenario)
-        {
-
-        }
-
-        public void DealerHandSection(int Scenario)
-        {
-
         }
 
         public void DeckSection(int Scenario)
         {
-
+            if (Scenario == 0) // Show deck count)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.SetCursorPosition(5, 3);
+                Console.Write("Remaining cards in deck:");
+                Console.SetCursorPosition(30, 3);
+                Console.Write(Deck.GetInstance().shuffledDeck.Count());
+                Console.SetCursorPosition(7, 4);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
         }
 
         public void GameLogSection(int Scenario)
         {
+            Hand hand = Hand.GetInstance();
 
+            Console.CursorLeft = 75;
+            Console.CursorTop = hand.playerList.Count() + 9;
+
+            if (hand.playerList.Count() + 9 <= 26)
+            {
+                if (Scenario == 0)
+                {
+
+                }
+
+                else if (Scenario == 1)
+                {
+                    Console.Write("Dealer dealt ");
+
+                    int suitValue = hand.dealerHand[0].CardDraw.Last().SuitInt;
+
+                    if (suitValue == 1 || suitValue == 4)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+
+                    else if (suitValue == 2 || suitValue == 3)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                    }
+
+                    Console.CursorLeft = 75;
+                    Console.CursorTop = hand.playerList.Count() + 9;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(hand.dealerHand[0].CardDraw.Last().CardName);
+                }
+            }
+
+            else
+            {
+                // Clear game log here
+            }
         }
 
         // Action methods
         // Possible Actions (Later when I can make it, split, surrender, Insurance, InurancePayout, Splithand
         public void Hit()
         {
-            Console.WriteLine("Test");
+            // Get instances
+            Hand hand = Hand.GetInstance();
+            Deck deck = Deck.GetInstance();
+
+            // Comment
+            Console.SetCursorPosition(5, 26);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(CurrentPlayer);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(" hits.                                  ");
+
+            // Get new card and add to hand
+
+            Card = deck.DrawCard(1);
+            hand.playerList[index].CardDraw.Add(Card[0]);
+            Console.SetCursorPosition(5, 9);
+            Console.Write(EmptyLeft);
+            Console.SetCursorPosition(5, 9);
+
+            for (int n = 0; n < hand.playerList[index].CardDraw.Count(); n++)
+            {
+                int suitValue = hand.playerList[index].CardDraw[n].SuitInt;
+
+                if (suitValue == 1 || suitValue == 4)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+
+                else if (suitValue == 2 || suitValue == 3)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                }
+
+                if (hand.playerList[index].CardDraw[n].ValueInt >= 11)
+                {
+                    valueInt = 10;
+                }
+                else
+                {
+                    valueInt = hand.playerList[index].CardDraw[n].ValueInt;
+                }
+                totalValue = valueInt + totalValue;
+                Console.Write(hand.playerList[index].CardDraw[n].CardName + ", ");
+            }
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("(" + totalValue + "), ($" + Bet + ")");
+
+            if (totalValue > 21)
+            {
+                CommentSection(0);
+            }
+
+            Console.SetCursorPosition(119, 29);
+            ActionCase = "1";
+            Thread.Sleep(3000);
+            ActionCase = "3";
         }
 
         public void Stand()
@@ -766,7 +927,7 @@
             Console.Write("Quitting blackjack.....");
             Console.SetCursorPosition(5, 26);
             Console.Write("Quitting blackjack.....");
-            Console.CursorLeft = 28;
+            Console.SetCursorPosition(119, 29);
             Thread.Sleep(3000);
             Console.Clear();
             Console.SetCursorPosition(45, 15);
@@ -782,7 +943,7 @@
             Console.WriteLine("Test");
         }
 
-        public void GetKeyInput()
+        public void InvalidKey()
         {
             Console.SetCursorPosition(5, 26);
             Console.ForegroundColor = ConsoleColor.Red;
@@ -790,6 +951,20 @@
             Console.SetCursorPosition(119, 29);
             Console.ForegroundColor = ConsoleColor.White;
             Thread.Sleep(3000);
+        }
+
+        public void GetKeyInput()
+        {
+            Hand hand = Hand.GetInstance();
+
+            Console.CursorLeft = 81;
+            Console.CursorTop = hand.playerList.Count() + 8;
+            Console.ForegroundColor = ConsoleColor.Green;
+            KeyInput = Console.ReadKey();
+            Console.CursorLeft = 81;
+            Console.CursorTop = hand.playerList.Count() + 8;
+            Console.Write("           ");
+            KeyInputCase = KeyInput.KeyChar.ToString();
         }
 
         // Rounds
@@ -809,4 +984,5 @@
         }
     }
 }
+
 
