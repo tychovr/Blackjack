@@ -195,6 +195,11 @@
                             Console.Clear();
                             stats.showStats();
                             i++;
+
+                            // Makes dealer
+                            List<Cards> cards = deck.DrawCard(2);
+                            Hand player = new Hand(cards, "Dealer", 10000, 0);
+                            dealerHand.Add(player);
                         }
 
                         else
@@ -217,6 +222,12 @@
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write("You have reached the maximum amount of players.");
                     Console.ResetColor();
+
+                    // Makes dealer
+                    List<Cards> cards = deck.DrawCard(2);
+                    Hand player = new Hand(cards, "Dealer", 10000, 0);
+                    dealerHand.Add(player);
+
                     System.Threading.Thread.Sleep(3000);
                     i++;
                     Console.Clear();

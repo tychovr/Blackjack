@@ -2,6 +2,7 @@
 {
     class Cards
     {
+        public string NewCardName;
         public string ValueName;
         public string SuitName;
         public int ValueInt;
@@ -9,12 +10,13 @@
 
         public bool Initiate { get; set; } = true;
 
-        public Cards(string valueName, int valueInt, string suitName, int suitInt)
+        public Cards(string valueName, int valueInt, string suitName, int suitInt, string newCardName)
         {
             ValueName = valueName;
             ValueInt = valueInt;
             SuitName = suitName;
             SuitInt = suitInt;
+            NewCardName = newCardName;
         }
 
         public enum cardSuit
@@ -42,6 +44,7 @@
             King = 12,
             Ace = 13
         }
+
 
         public override string ToString()
         {

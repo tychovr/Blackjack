@@ -1,0 +1,56 @@
+﻿Comments:
+0, Player's turn
+1, Place bet + validation
+2, Bet over 1000
+3, Bet under 10
+4, Bet over balance
+5, Bet is (value)
+6, Choose one action
+7, Invalid input
+
+Comments : Player action
+!! Included in actions
+
+Comments : Dealer action
+8, Dealer hit
+9, Dealer stand
+
+Comments : Win determation
+7, player went over 21 and lost
+8, dealer went over 21 and lost
+9, player and dealer both went over 21 and lost
+10, player and dealer both stayed at 21 and tied
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Actions:
+0, No actions available
+1, Quit and Secret
+2, Hit, Stand, Double Down, Quit, Secret
+3, Hit, Stand, Quit, Secret
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Player Hand:
+0, Player's hand + Total + Bet
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Dealer Hand:
+0, first card + hidden card + hidden total
+1, all cards reveal
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Deck:
+0, Deck count
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Game Log:
+0, empty log
+1, player dealt card
+2, dealer dealt first card + hidden card
+3, dealer dealt new card
+4, Player wins (money won) with (totalvalue cards)
+5, Dealer wins with (totalvalue cards)
+6, Player and Dealer tie with (totalvalue cards)

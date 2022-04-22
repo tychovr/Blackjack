@@ -32,7 +32,90 @@
                     var cardIntValue = (Cards.cardValue)j;
                     string cardValue = cardIntValue.ToString();
 
-                    Cards cards = new Cards(cardValue, valueInt, cardSuitName, valueSuit);
+                    string CardName = "";
+                    string CardSuit = "";
+                    string newCardName = "";
+
+                    string SwitchCaseValue = valueInt.ToString();
+                    string SwitchCaseSuit = valueSuit.ToString();
+
+                    switch (SwitchCaseValue)
+                    {
+                        case "1":
+                            CardName = "2";
+                            break;
+
+                        case "2":
+                            CardName = "3";
+                            break;
+
+                        case "3":
+                            CardName = "4";
+                            break;
+
+                        case "4":
+                            CardName = "5";
+                            break;
+
+                        case "5":
+                            CardName = "6";
+                            break;
+
+                        case "6":
+                            CardName = "7";
+                            break;
+
+                        case "7":
+                            CardName = "8";
+                            break;
+
+                        case "8":
+                            CardName = "9";
+                            break;
+
+                        case "9":
+                            CardName = "10";
+                            break;
+
+                        case "10":
+                            CardName = "j";
+                            break;
+
+                        case "11":
+                            CardName = "q";
+                            break;
+
+                        case "12":
+                            CardName = "k";
+                            break;
+
+                        case "13":
+                            CardName = "a";
+                            break;
+                    }
+
+                    switch (SwitchCaseSuit)
+                    {
+                        case "1":
+                            CardSuit = "♦";
+                            break;
+
+                        case "2":
+                            CardSuit = "♣";
+                            break;
+
+                        case "3":
+                            CardSuit = "♠";
+                            break;
+
+                        case "4":
+                            CardSuit = "♥";
+                            break;
+                    }
+
+                    newCardName = CardName + CardSuit;
+
+                    Cards cards = new Cards(cardValue, valueInt, cardSuitName, valueSuit, newCardName);
                     sortedDeck.Add(cards);
                 }
             }
