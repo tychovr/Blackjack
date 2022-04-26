@@ -15,9 +15,9 @@
 
         public List<Hand> dealerHand = new List<Hand>();
         public List<Hand> playerList = new List<Hand>();
+        public List<Cards> CardDraw = new List<Cards>();
 
         // hand object property's
-        public List<Cards> CardDraw = new List<Cards>();
         public string PlayerName = "";
         public int Saldo = 0;
         public int Wins = 0;
@@ -91,7 +91,7 @@
 
                         else
                         {
-                            List<Cards> cards = null;
+                            List<Cards> cards = new List<Cards>();
                             Hand player = new Hand(cards, tempPlayerName, 1000, 0);
                             playerList.Add(player);
                             players++;

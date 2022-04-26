@@ -19,10 +19,10 @@ Comments : Dealer action
 5, Dealer stand
 
 Comments : Win determation
-7, player went over 21 and lost
-8, dealer went over 21 and lost
-9, player and dealer both went over 21 and lost
-10, player and dealer both stayed at 21 and tied
+6, player went over 21 and lost
+7, dealer went over 21 and player won
+8, player and dealer both stayed at (totalPoints) and tied
+9, player and dealer both stayed at 21 and tied
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -43,6 +43,8 @@ Dealer Hand:
 0, No cards
 1, first card + hidden card + hidden total
 2, all cards reveal
+3, hit
+4, stand
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

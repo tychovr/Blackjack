@@ -195,9 +195,35 @@
             return draw;
         }
 
-        public void Print(int cardNumber)
+        public void PlayerGetDeck()
         {
-            Console.Write(" " + shuffledDeck[cardNumber]);
+            Hand hand = Hand.GetInstance();
+            Deck deck = Deck.GetInstance();
+            Game game = Game.GetInstance();
+
+            List<Cards> Card = new List<Cards>();
+
+            Card = deck.DrawCard(2);
+            hand.playerList[game.index].CardDraw.Add(Card[0]);
+            game.GameLogSection(0);
+            hand.playerList[game.index].CardDraw.Add(Card[1]);
+            game.GameLogSection(0);
+        }
+
+        public void Dealer(int Scenario)
+        {
+            Hand hand = Hand.GetInstance();
+            Deck deck = Deck.GetInstance();
+            Game game = Game.GetInstance();
+
+            List<Cards> Card = new List<Cards>();
+
+            if (Scenario == 0) // Get first card from deck
+            {
+                Card = deck.DrawCard(1);
+                hand.dealerHand[0].CardDraw.Add(Card[0]);
+                game.GameLogSection(1);
+            }
         }
     }
 }

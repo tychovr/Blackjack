@@ -2,6 +2,18 @@
 {
     internal class Game
     {
+
+        private Game() { }
+        private static Game _instance;
+        public static Game GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new Game();
+            }
+            return _instance;
+        }
+
         // Get instances
         public string ActionCase = "";
         public ConsoleKeyInfo KeyInput;
@@ -23,6 +35,7 @@
         public int Bet = 0;
         public int valueInt = 0;
         public int totalValue = 0;
+        public int totalValue2 = 0;
 
         // Lists
         public List<Cards> Card = new List<Cards>();
@@ -30,6 +43,7 @@
 
         public static void Initialize()
         {
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Title = "Tycho's blackjack simulation";
             Console.WriteLine("Initializing blackjack simulation.....");
             Deck deck = Deck.GetInstance();
@@ -279,6 +293,7 @@
             // Get instances
             Hand hand = Hand.GetInstance();
             Stats stats = Stats.GetInstance();
+            Deck deck = Deck.GetInstance();
 
             for (int i = 0; i < 1;)
             {
@@ -287,8 +302,8 @@
                 CommentSection(0); // Announce player
                 ActionSection(0); // No actions available
                 DeckSection(0); // Show deck count
-                Dealer(0); // Dealer get cards
-                PlayerGetDeck(); // Player get cards before round
+                deck.PlayerGetDeck(); // Player get cards before round
+                deck.Dealer(0); // Dealer get cards
 
                 Console.SetCursorPosition(119, 29);
                 Thread.Sleep(3000);
@@ -307,34 +322,22 @@
                 PossibleActions();
                 Thread.Sleep(3000);
 
+                if (totalValue2 <= 17) // dealer hit
+                {
+                    DealerHandSection(3);
+                }
+
+                else if (totalValue2 >= 18) // dealer stand
+                {
+                    DealerHandSection(3);
+                }
+
                 /* 
                 Hit afmaken, hoger dan 21, lose round
                 Aan andere actions beginnen
                 Dealer speelt nadat player action heeft gedaan, tenzij player lose
                 Object reference not set for blackjack() and PlayerGetDeck()
                 */
-            }
-        }
-
-        public void PlayerGetDeck()
-        {
-            Hand hand = Hand.GetInstance();
-            Deck deck = Deck.GetInstance();
-
-            Card = deck.DrawCard(2);
-            hand.playerList[index].CardDraw.Add(Card[0]);
-        }
-
-        public void Dealer(int Scenario)
-        {
-            Hand hand = Hand.GetInstance();
-            Deck deck = Deck.GetInstance();
-
-            if (Scenario == 0)
-            {
-                Card = deck.DrawCard(1);
-                hand.dealerHand[0].CardDraw.Add(Card[0]);
-                GameLogSection(1);
             }
         }
 
@@ -542,7 +545,58 @@
                 Console.Write("Invalid input!                          ");
                 Console.SetCursorPosition(119, 29);
                 Console.ForegroundColor = ConsoleColor.White;
-                Thread.Sleep(3000);
+            }
+
+            else if (Scenario == 4)
+            {
+                Console.SetCursorPosition(5, 26);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("Dealer hit!                                 ");
+                Console.SetCursorPosition(119, 29);
+            }
+
+            else if (Scenario == 5)
+            {
+                Console.SetCursorPosition(5, 26);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("Dealer stands!               ");
+                Console.SetCursorPosition(119, 29);
+            }
+
+            else if (Scenario == 6)
+            {
+                Console.SetCursorPosition(5, 26);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write(hand.playerList[index].PlayerName + "went over 21 points and lost!              ");
+                Console.SetCursorPosition(119, 29);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+            else if (Scenario == 7)
+            {
+                Console.SetCursorPosition(5, 26);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("Dealer went over 21 points " + hand.playerList[index].PlayerName + " won!");
+                Console.SetCursorPosition(119, 29);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+            else if (Scenario == 8)
+            {
+                Console.SetCursorPosition(5, 26);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("Dealer and " + hand.playerList[index].PlayerName + " both stayed at " + totalValue + " points and tied!");
+                Console.SetCursorPosition(119, 29);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+            else if (Scenario == 9)
+            {
+                Console.SetCursorPosition(5, 26);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("Dealer and " + hand.playerList[index].PlayerName + " both have blackjack and tied!");
+                Console.SetCursorPosition(119, 29);
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
@@ -704,10 +758,9 @@
                 Console.Write("Hand hidden.");
             }
 
-            else if (Scenario == 1)
+            else if (Scenario == 1) // Show first card, hide second and total
             {
                 int valueInt2 = 0;
-                int totalValue2 = 0;
 
                 Console.SetCursorPosition(5, 15);
                 int suitValue = hand.dealerHand[0].CardDraw[0].SuitInt;
@@ -738,7 +791,7 @@
                 Console.Write(", xX, (hidden)");
             }
 
-            else if (Scenario == 2)
+            else if (Scenario == 2) // Show full hand + total
             {
                 int valueInt2 = 0;
                 int totalValue2 = 0;
@@ -772,6 +825,16 @@
                     Console.Write(hand.dealerHand[index].CardDraw[n].CardName + ", ");
                 }
             }
+
+            else if (Scenario == 3) // Hit
+            {
+
+            }
+
+            else if (Scenario == 4) // Stand
+            {
+
+            }
         }
 
         public void DeckSection(int Scenario)
@@ -792,21 +855,16 @@
         {
             Hand hand = Hand.GetInstance();
 
-            Console.CursorLeft = 75;
-            Console.CursorTop = hand.playerList.Count() + 9;
+            Console.CursorLeft = 78;
+            Console.CursorTop = hand.playerList.Count() + 9 + GameLog;
 
             if (hand.playerList.Count() + 9 <= 26)
             {
                 if (Scenario == 0)
                 {
-
-                }
-
-                else if (Scenario == 1)
-                {
-                    Console.Write("Dealer dealt ");
-
                     int suitValue = hand.dealerHand[0].CardDraw.Last().SuitInt;
+
+                    Console.Write(hand.playerList[index].PlayerName + " dealt ");
 
                     if (suitValue == 1 || suitValue == 4)
                     {
@@ -818,16 +876,36 @@
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                     }
 
-                    Console.CursorLeft = 75;
-                    Console.CursorTop = hand.playerList.Count() + 9;
+                    Console.Write(hand.playerList[index].CardDraw.Last().CardName);
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(hand.dealerHand[0].CardDraw.Last().CardName);
                 }
-            }
 
-            else
-            {
-                // Clear game log here
+                else if (Scenario == 1)
+                {
+                    int suitValue = hand.dealerHand[0].CardDraw.Last().SuitInt;
+
+                    Console.CursorLeft = 77;
+                    Console.Write(" Dealer dealt ");
+
+                    if (suitValue == 1 || suitValue == 4)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+
+                    else if (suitValue == 2 || suitValue == 3)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                    }
+
+                    Console.Write(hand.dealerHand[0].CardDraw.Last().CardName);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    GameLog = -1; // Clear game log here
+                }
+
+                GameLog++;
             }
         }
 
@@ -885,7 +963,8 @@
 
             if (totalValue > 21)
             {
-                CommentSection(0);
+                CommentSection(7);
+
             }
 
             Console.SetCursorPosition(119, 29);

@@ -6,7 +6,7 @@
         // https://www.casinostrategy.org/blackjack/blackjack-terminology.htm
         static void Main(string[] args)
         {
-            Game Game = new Game();
+            Game Game = Game.GetInstance();
             //Initialize - Let the games begin!
             Game.Initialize();
             Game.Intro();
