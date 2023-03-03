@@ -2,7 +2,7 @@
 {
     class Program
     {
-        // Blackjack options in-game
+        // Blackjack op tions in-game
         // https://www.casinostrategy.org/blackjack/blackjack-terminology.htm
         static void Main(string[] args)
         {

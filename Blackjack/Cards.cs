@@ -9,7 +9,6 @@
         public int SuitInt;
 
         public bool Initiate { get; set; } = true;
-
         public Cards(string valueName, int valueInt, string suitName, int suitInt, string cardName)
         {
             ValueName = valueName;
@@ -48,7 +47,7 @@
 
         public override string ToString()
         {
-            return ValueName + " of " + SuitName;
+            return ValueName + "of " + SuitName;
         }
     }
 }

@@ -16,13 +16,17 @@ Comments : Player action
 
 Comments : Dealer action
 4, Dealer hit
-5, Dealer stand
+5, Dealer stand 
 
 Comments : Win determation
 6, player went over 21 and lost
 7, dealer went over 21 and player won
 8, player and dealer both stayed at (totalPoints) and tied
-9, player and dealer both stayed at 21 and tied
+9, player and dealer both stayed at 21 and player won
+10, player won with blackjack
+11, dealer won with blackjack
+12, dealer won with (totalPoints) points.
+13, player won with (totalPoints) points.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +34,7 @@ Actions:
 0, No actions available
 1, Quit and Secret
 2, Hit, Stand, Double Down, Quit, Secret
-3, Hit, Stand, Quit, Secret
+2, Hit, Stand, Quit, Secret
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -56,6 +60,21 @@ Deck:
 Game Log:
 0, player dealt card
 1, dealer dealt card
-2, Player wins (money won) with (totalvalue cards)
+2, Player wins (money won)
 3, Dealer wins with (totalvalue cards)
 4, Player and Dealer tie with (totalvalue cards)
+5, Empty game log
+6, Player busted
+7, Dealer busted
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Game Over:
+0, player went over 21 and lost
+1, dealer went over 21 and player won
+2, player and dealer both stayed at (totalPoints) and tied
+3, player and dealer both stayed at 21 and player won
+4, player won with blackjack
+5, dealer won with blackjack
+6, player won with (points)
+7, dealer won with (points)

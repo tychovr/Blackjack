@@ -34,7 +34,7 @@
 
                     string CardName = "";
                     string CardSuit = "";
-                    string newCardName = "";
+                    string newCardName = " ";
 
                     string SwitchCaseValue = valueInt.ToString();
                     string SwitchCaseSuit = valueSuit.ToString();
@@ -123,9 +123,10 @@
 
         public void ShuffleDeck()
         {
+            int Index = 0;
             FillDeck();
 
-            for (int i = 0; i <= 51; i++)
+            for (int i = 0; i != sortedDeck.Count();)
             {
 
                 Random randomIndex = new Random();
@@ -140,9 +141,10 @@
                     if (Initiate == true)
                     {
                         Console.Write("\r");
-                        Console.Write("\nAdding " + shuffledDeck[i] + " to deck.....");
+                        Console.Write("\nAdding " + shuffledDeck[Index] + " to deck.....");
                         System.Threading.Thread.Sleep(50);
                         Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+                        Index++;
                     }
                 }
             }
@@ -188,6 +190,26 @@
             List<Cards> draw = new List<Cards>(amount);
             for (int i = 0; i < amount; i++)
             {
+                if (shuffledDeck.Count == 0)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.SetCursorPosition(5, 26);
+                        Console.Write("                          ");
+                        Console.SetCursorPosition(5, 26);
+                        Console.Write("Shuffling deck");
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            Console.Write(".");
+                            Thread.Sleep(300);
+                        }
+                    }
+
+                    ShuffleDeck();
+                }
+
                 draw.Add(shuffledDeck[0]);
                 shuffledDeck.RemoveAt(0);
             }
@@ -206,8 +228,10 @@
             Card = deck.DrawCard(2);
             hand.playerList[game.index].CardDraw.Add(Card[0]);
             game.GameLogSection(0);
+            game.DeckSection(0);
             hand.playerList[game.index].CardDraw.Add(Card[1]);
             game.GameLogSection(0);
+            game.DeckSection(0);
         }
 
         public void Dealer(int Scenario)
@@ -223,6 +247,7 @@
                 Card = deck.DrawCard(1);
                 hand.dealerHand[0].CardDraw.Add(Card[0]);
                 game.GameLogSection(1);
+                game.DeckSection(0);
             }
         }
     }

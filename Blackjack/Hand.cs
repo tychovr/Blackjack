@@ -92,7 +92,7 @@
                         else
                         {
                             List<Cards> cards = new List<Cards>();
-                            Hand player = new Hand(cards, tempPlayerName, 1000, 0);
+                            Hand player = new Hand(cards, tempPlayerName, 10000, 0);
                             playerList.Add(player);
                             players++;
                         }
@@ -100,10 +100,15 @@
 
                     else
                     {
-                        Console.Write("\nDo you want to add another player? ");
+                        Console.Write("\n Do you want to add another player? ");
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("(Y/N)\n");
                         Console.ResetColor();
+
+                        while (Console.KeyAvailable)
+                        {
+                            Console.ReadKey(false);
+                        }
 
                         var answer = Console.ReadKey().Key;
                         Console.CursorLeft = 0;
@@ -180,7 +185,7 @@
 
                                     else
                                     {
-                                        List<Cards> cards = deck.DrawCard(2);
+                                        List<Cards> cards = new List<Cards>();
                                         Hand player = new Hand(cards, tempPlayerName, 10000, 0);
                                         playerList.Add(player);
                                         players++;
@@ -197,7 +202,7 @@
                             i++;
 
                             // Makes dealer
-                            List<Cards> cards = deck.DrawCard(2);
+                            List<Cards> cards = new List<Cards>();
                             Hand player = new Hand(cards, "Dealer", 10000, 0);
                             dealerHand.Add(player);
                         }
@@ -224,9 +229,9 @@
                     Console.ResetColor();
 
                     // Makes dealer
-                    List<Cards> cards = deck.DrawCard(2);
-                    Hand player = new Hand(cards, "Dealer", 10000, 0);
-                    dealerHand.Add(player);
+                    List<Cards> cards = new List<Cards>();
+                    Hand dealer = new Hand(cards, "Dealer", 10000, 0);
+                    dealerHand.Add(dealer);
 
                     System.Threading.Thread.Sleep(3000);
                     i++;
