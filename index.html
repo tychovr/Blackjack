@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tycho's Blackjack Console</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        #console-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #0a0a0a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+        
+        #console-output {
+            width: 100%;
+            min-height: 600px;
+            background-color: #000;
+            color: #fff;
+            font-size: 14px;
+            line-height: 1.4;
+            padding: 15px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+        
+        .color-white { color: #fff; }
+        .color-red { color: #ff5555; }
+        .color-green { color: #50fa7b; }
+        .color-yellow { color: #f1fa8c; }
+        .color-cyan { color: #8be9fd; }
+        .color-magenta { color: #ff79c6; }
+        .color-blue { color: #6272a4; }
+        .color-darkgray { color: #6c6c6c; }
+        .color-darkyellow { color: #bd9d39; }
+        
+        #title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #fff;
+        }
+        
+        #title .name {
+            color: #ff5555;
+        }
+        
+        .info {
+            text-align: center;
+            margin-top: 15px;
+            color: #6272a4;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="console-container">
+        <div id="title">
+            WELCOME TO <span class="name">TYCHO'S</span> VIRTUAL BLACKJACK CASINO!
+        </div>
+        <div id="console-output"></div>
+        <div class="info">
+            C# Console Application - Web Console View
+        </div>
+    </div>
+    
+    <script>
+        const consoleOutput = document.getElementById('console-output');
+        
+        // Simulated console logs from the C# application
+        const logs = [
+            { text: 'Initializing blackjack simulation....', color: 'white', delay: 0 },
+            { text: '\n\n', color: 'white', delay: 3000 },
+            { text: 'WELCOME TO ', color: 'white', delay: 3100 },
+            { text: "TYCHO'S ", color: 'red', delay: 3100 },
+            { text: 'VIRTUAL BLACKJACK CASINO!', color: 'white', delay: 3100 },
+            { text: '\n\nPress any key to continue\n\n', color: 'white', delay: 3100 },
+            { text: 'THE RULES:\n\n', color: 'yellow', delay: 5000 },
+            { text: 'You have ', color: 'white', delay: 5000 },
+            { text: '$10000 ', color: 'yellow', delay: 5000 },
+            { text: 'to play with.\n', color: 'white', delay: 5000 },
+            { text: 'You can bet up to ', color: 'white', delay: 5000 },
+            { text: '$1000 ', color: 'yellow', delay: 5000 },
+            { text: 'per hand.\n', color: 'white', delay: 5000 },
+            { text: 'You can only hit ', color: 'white', delay: 5000 },
+            { text: 'once ', color: 'yellow', delay: 5000 },
+            { text: 'per hand.\n', color: 'white', delay: 5000 },
+            { text: 'You can only stand ', color: 'white', delay: 5000 },
+            { text: 'once ', color: 'yellow', delay: 5000 },
+            { text: 'per hand.\n', color: 'white', delay: 5000 },
+            { text: 'You can only double down ', color: 'white', delay: 5000 },
+            { text: 'once ', color: 'yellow', delay: 5000 },
+            { text: 'per hand.\n', color: 'white', delay: 5000 },
+            { text: 'You can only split ', color: 'white', delay: 5000 },
+            { text: 'once ', color: 'yellow', delay: 5000 },
+            { text: 'per hand.\n\n', color: 'white', delay: 5000 },
+            { text: 'If you ', color: 'white', delay: 5000 },
+            { text: 'lose ', color: 'red', delay: 5000 },
+            { text: 'your bet is ', color: 'white', delay: 5000 },
+            { text: 'lost.\n', color: 'red', delay: 5000 },
+            { text: 'If you ', color: 'white', delay: 5000 },
+            { text: 'win ', color: 'green', delay: 5000 },
+            { text: 'your bet is ', color: 'white', delay: 5000 },
+            { text: 'doubled.\n\n', color: 'green', delay: 5000 },
+            { text: "Use the, ", color: 'white', delay: 5000 },
+            { text: "'H' ", color: 'yellow', delay: 5000 },
+            { text: 'key to hit,\n', color: 'white', delay: 5000 },
+            { text: "'S' ", color: 'yellow', delay: 5000 },
+            { text: 'key to stand,\n', color: 'white', delay: 5000 },
+            { text: "'D' ", color: 'yellow', delay: 5000 },
+            { text: 'key to double down,\n', color: 'white', delay: 5000 },
+            { text: "'Q' ", color: 'yellow', delay: 5000 },
+            { text: 'key to quit,\n', color: 'white', delay: 5000 },
+            { text: "'X' ", color: 'yellow', delay: 5000 },
+            { text: 'key to find a secret.\n\n', color: 'white', delay: 5000 },
+            { text: 'Press any key to continue\n\n', color: 'white', delay: 5000 },
+            { text: '                                                   Let the games begin!\n\n', color: 'magenta', delay: 8000 },
+            { text: '----------------------------------------------------------------\n', color: 'magenta', delay: 11000 },
+            { text: '| ', color: 'magenta', delay: 11000 },
+            { text: 'Deck', color: 'cyan', delay: 11000 },
+            { text: '                                                         |\n', color: 'magenta', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: '|  Remaining cards in deck: 52                                 |\n', color: 'cyan', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: '----------------------------------------------------------------\n', color: 'magenta', delay: 11000 },
+            { text: '| ', color: 'magenta', delay: 11000 },
+            { text: "Player's Hand & Bets", color: 'green', delay: 11000 },
+            { text: '                                      |\n', color: 'magenta', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: '|  Hand hidden.                                                |\n', color: 'white', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: '----------------------------------------------------------------\n', color: 'magenta', delay: 11000 },
+            { text: '| ', color: 'magenta', delay: 11000 },
+            { text: "Dealer's Hand", color: 'red', delay: 11000 },
+            { text: '                                               |\n', color: 'magenta', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: '|  Hand hidden.                                                |\n', color: 'white', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: '----------------------------------------------------------------\n', color: 'magenta', delay: 11000 },
+            { text: '| ', color: 'magenta', delay: 11000 },
+            { text: 'Actions', color: 'yellow', delay: 11000 },
+            { text: '                                                       |\n', color: 'magenta', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: '|  No actions available.                                       |\n', color: 'white', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: '----------------------------------------------------------------\n', color: 'magenta', delay: 11000 },
+            { text: '| ', color: 'magenta', delay: 11000 },
+            { text: 'Comments', color: 'blue', delay: 11000 },
+            { text: '                                                      |\n', color: 'magenta', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: "|  It's your turn!                                            |\n", color: 'white', delay: 11000 },
+            { text: '|                                                              |\n', color: 'magenta', delay: 11000 },
+            { text: '----------------------------------------------------------------\n', color: 'magenta', delay: 11000 },
+            { text: '\n                                      -----------------------------------------\n', color: 'magenta', delay: 11000 },
+            { text: '                                      | ', color: 'magenta', delay: 11000 },
+            { text: 'Game Log', color: 'blue', delay: 11000 },
+            { text: '                            |\n', color: 'magenta', delay: 11000 },
+            { text: '                                      |                                       |\n', color: 'magenta', delay: 11000 },
+            { text: '                                      |  >>                                   |\n', color: 'white', delay: 11000 },
+            { text: '                                      |                                       |\n', color: 'magenta', delay: 11000 },
+            { text: '                                      -----------------------------------------\n', color: 'magenta', delay: 11000 },
+            { text: '\n\n', color: 'white', delay: 11000 },
+            { text: 'This is a demonstration of the C# Console Application output.\n', color: 'cyan', delay: 14000 },
+            { text: 'The actual game logic is implemented in the C# codebase.\n', color: 'cyan', delay: 14000 },
+        ];
+        
+        // Function to append text with color
+        function appendText(text, color) {
+            const span = document.createElement('span');
+            span.className = `color-${color}`;
+            span.textContent = text;
+            consoleOutput.appendChild(span);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        // Animate the console output
+        let currentIndex = 0;
+        let currentDelay = 0;
+        
+        function displayNextLog() {
+            if (currentIndex >= logs.length) return;
+            
+            const log = logs[currentIndex];
+            
+            setTimeout(() => {
+                appendText(log.text, log.color);
+                currentIndex++;
+                displayNextLog();
+            }, log.delay - currentDelay);
+            
+            currentDelay = log.delay;
+        }
+        
+        // Start the animation
+        displayNextLog();
+    </script>
+</body>
+</html>
